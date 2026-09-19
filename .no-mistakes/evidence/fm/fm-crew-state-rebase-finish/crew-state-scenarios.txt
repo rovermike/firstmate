@@ -1,0 +1,46 @@
+fm-crew-state.sh driven end-to-end over real git crew worktrees, a real state/ dir,
+and a fake `no-mistakes` CLI serving the run records / ledger / daemon probe.
+'before' lines run the same fixture against the base-commit helper (2bcb88c).
+
+
+== S1 live-run-after-rebase (the reported regression) ==
+    after  : state: working · source: run-step · validating (running) · run: 01LIVE
+  PASS live rebased run reads working from the run step
+    before : state: failed · source: status-log · earlier stage run
+  PASS base commit misreports the same crew (regression reproduced)
+
+== S2 executing-status-words (pending/running/fixing/ci) ==
+    pending -> state: working · source: run-step · run active (pending)
+  PASS executing word 'pending' at a rebased head reads working
+    running -> state: working · source: run-step · validating (running)
+  PASS executing word 'running' at a rebased head reads working
+    fixing -> state: working · source: run-step · validating (fixing)
+  PASS executing word 'fixing' at a rebased head reads working
+    ci -> state: working · source: run-step · ci running
+  PASS executing word 'ci' at a rebased head reads working
+
+== S3 parked-run-at-rebased-head-must-not-bind (adversarial) ==
+    state: working · source: status-log · implementing
+  PASS a parked run at a diverged head is not attributed
+
+== S4 dead-daemon-suppresses-head-free-live-bind (adversarial) ==
+    state: blocked · source: status-log · waiting on review
+  PASS a record left saying running by a dead daemon stops answering
+
+== S5 unanswered-probe-does-not-flap-a-live-crew (adversarial) ==
+    state: working · source: run-step · validating (running)
+  PASS a slow (unanswered) probe leaves the live run bound
+
+== S6 dead-daemon-leaves-the-open-decision-open ==
+    state: parked · source: status-log · approve the schema change · no-mistakes daemon unreachable; last run record running - unverified · run: 01LIVE
+  PASS the open decision stays parked and names the dead instrument
+
+== S7 coarse-head-tied-row-keeps-working-and-the-original-supersede-note ==
+    state: working · source: run-step · validating (background run) · status-log superseded by active run
+  PASS a head-tied coarse live row keeps its working reading
+
+== S8 coarse-failed-row-with-dead-daemon-reads-unknown-not-parked ==
+    state: unknown · source: run-step · no-mistakes daemon unreachable; last ledger record failed - unverified · status-log superseded (run unknown)
+  PASS a terminal coarse failure with a dead daemon reads unknown, never parked
+
+---- 12 passed, 0 failed ----
