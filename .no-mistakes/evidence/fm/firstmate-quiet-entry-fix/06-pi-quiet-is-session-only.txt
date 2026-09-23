@@ -1,0 +1,15 @@
+=== Pi: /quiet writes nothing durable, so a restart digest reports away/quiet inactive (what the skill now tells the captain) ===
+state/ after the Pi /quiet entry: [empty]
+
+$ bin/fm-session-start.sh   # restart on pi
+97:AFK
+98---------------------------------------------------------------------------------
+99-absent
+--- supervision state lines ---
+--- supervision state bullets in the Pi digest ---
+- Lock: held by this session; this session owns normal supervision unless away mode says otherwise.
+- Away/quiet mode: inactive.
+- X mode: inactive; use the default watcher cadence.
+- Ordinary wake: the Stop-owned auto-arm (bin/fm-claude-stop-autoarm.sh) already owns watcher continuity; drain and handle the wake, and do not arm another cycle yourself.
+
+The quiet skill now tells the captain, on Pi: quiet "holds for this session only ... it will report away/quiet mode inactive" - which is what the real digest above prints.

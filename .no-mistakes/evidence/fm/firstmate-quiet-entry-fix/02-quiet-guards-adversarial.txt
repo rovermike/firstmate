@@ -1,0 +1,52 @@
+### A. A bare /afk start (no FM_AFK_MODE) still refuses without the away record
+$ bash bin/fm-afk-launch.sh start-native
+fm-afk-launch: an away-posture record is required; run enter before starting the daemon - but a quiet entry never runs enter: set FM_AFK_MODE=quiet, which is not the away posture and needs no record
+exit=1
+state: flag=none record=none
+
+$ FM_AFK_MODE=away bash bin/fm-afk-launch.sh start-native
+fm-afk-launch: an away-posture record is required; run enter before starting the daemon - but a quiet entry never runs enter: set FM_AFK_MODE=quiet, which is not the away posture and needs no record
+exit=1
+state: flag=none record=none
+
+### B. A /quiet entry is refused while an away-posture record stands (captain must return first)
+state: flag=none record=present
+$ FM_AFK_MODE=quiet bash bin/fm-afk-launch.sh start-native
+fm-afk-launch: an away-posture record stands; quiet mode cannot start until the captain's return (bin/fm-afk-return.sh) archives it
+exit=1
+state: flag=none record=present
+
+### C. Going /afk out of quiet mode: enter keeps the daemon presence gate, the next start writes away
+$ FM_AFK_MODE=quiet bash bin/fm-afk-launch.sh start-native   # in quiet mode
+state: flag=quiet record=none
+$ bash bin/fm-afk-launch.sh enter --words "ship it"
+exit=0
+state: flag=quiet record=present
+$ bash bin/fm-afk-launch.sh start-native   # no FM_AFK_MODE: the record means away
+fm-afk-launch: reconciling leaked daemon terminal none:-
+exit=0
+state: flag=away record=present
+$ bash bin/fm-afk-launch.sh stop
+fm-afk-launch: away-posture record archived at /var/folders/cb/8rpk_9b972q8fy4jm3vy_vgw0000gn/T//fm-adv.pgE9SU/state/afk-contracts/1790187988.afk-contract
+fm-afk-launch: away mode stopped; no daemon terminal was running, .afk cleared, and the posture record archived
+state: flag=none record=none
+
+### D. Pi and pi-signed: a /quiet entry launches nothing, and the refusal names the quiet path
+--- primary harness: pi ---
+$ FM_AFK_MODE=quiet bash bin/fm-afk-launch.sh start
+fm-afk-launch: the away daemon is no longer launched on pi; the away-posture record is the posture there (run bin/fm-afk-launch.sh enter and stop), and quiet mode launches nothing at all here, so never run enter for /quiet
+exit=1
+state: flag=none record=none
+--- primary harness: pi-signed ---
+$ FM_AFK_MODE=quiet bash bin/fm-afk-launch.sh start
+fm-afk-launch: the away daemon is no longer launched on pi-signed; the away-posture record is the posture there (run bin/fm-afk-launch.sh enter and stop), and quiet mode launches nothing at all here, so never run enter for /quiet
+exit=1
+state: flag=none record=none
+
+### E. The catch-up gate names the posture it is holding
+$ bash bin/fm-afk-launch.sh start-native   # quiet flag stands, catch-up pending
+fm-afk-launch: return catch-up is still pending; run bin/fm-afk-return.sh check before re-entering quiet mode
+exit=1
+$ bash bin/fm-afk-launch.sh enter --words "go fix prod"   # an /afk entry beside the same stale quiet flag
+fm-afk-launch: return catch-up is still pending; run bin/fm-afk-return.sh check before re-entering away mode
+exit=1

@@ -1,0 +1,12 @@
+=== BASE  9296f9b : quiet SKILL.md -> afk SKILL.md section references (exact heading match) ===
+    DANGLING  "How to exit afk"
+    DANGLING  "What it does"
+    afk headings: ['afk', 'Entering: /afk [words]', 'While away', 'How to exit: the return', 'Orthogonal to approval authority', 'The daemon, where it still runs', 'Operational prefix contract', 'Busy-guard and composer guard', 'Submit model', 'Classification policy', 'Injection hardening', 'Stale-artifact lifecycle', 'Reliability properties']
+    -> 2 reference(s), 2 dangling
+
+=== TARGET 7f8774f : quiet SKILL.md -> afk SKILL.md section references (exact heading match) ===
+    RESOLVES  "Entering: /afk [words]"
+    RESOLVES  "How to exit: the return"
+    afk headings: ['afk', 'Entering: /afk [words]', 'While away', 'How to exit: the return', 'Orthogonal to approval authority', 'The daemon, where it still runs', 'Operational prefix contract', 'Busy-guard and composer guard', 'Submit model', 'Classification policy', 'Injection hardening', 'Stale-artifact lifecycle', 'Reliability properties']
+    -> 2 reference(s), 0 dangling
+

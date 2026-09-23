@@ -1,0 +1,44 @@
+=== tests/fm-afk-launch.test.sh (herdr e2e skipped: no --herdr-lab authority in this phase) ===
+ok - pi: start refuses to launch the daemon, writes no state, and keeps a quiet entry off enter
+ok - pi: start-native refuses to prepare a daemon
+ok - pi-signed: start refuses to launch the daemon, writes no state, and keeps a quiet entry off enter
+ok - pi-signed: start-native refuses to prepare a daemon
+ok - pi enter stop: reports that no daemon terminal was running
+ok - daemon entry: no daemon lifecycle starts without the away-posture record, and the refusal points a quiet entry away from enter
+ok - daemon entry: enter then start-native run back to back with no confirmation between them
+ok - quiet entry: starts with no away-posture record and leaves none behind
+ok - quiet entry: a bare refresh of quiet mode needs no record and keeps quiet
+ok - quiet entry: the terminal-backed start passes the posture check without a record too
+ok - quiet exit: stop clears quiet mode, names the quiet posture, and claims no record archive
+ok - away entry: an explicit away start still requires its record
+ok - quiet entry: refuses while an away-posture record stands and leaves it alone
+ok - quiet to away: enter writes the record without clearing the daemon's presence gate
+ok - quiet to away: an /afk entry over quiet mode writes away once the record stands
+ok - posture wording: a quiet refresh of a running daemon reports the quiet flag, not away
+ok - posture wording: the catch-up gate names the quiet posture it is holding
+ok - posture wording: the catch-up gate calls an enter an away entry beside a stale quiet flag
+ok - posture wording: an away refresh beside the record still reports the away flag
+ok - stop: clears the away flag, names the away posture, and archives the record under its entry time
+ok - mode: a fresh entry with FM_AFK_MODE=quiet writes quiet
+ok - mode: a fresh entry with FM_AFK_MODE unset defaults to away
+ok - mode: a bare refresh (FM_AFK_MODE unset) of an already-running quiet daemon preserves quiet, never resets to away
+ok - mode: an empty (legacy pre-mode) flag reads as away
+ok - mode: a bare-epoch-timestamp (legacy pre-mode) flag reads as away
+ok - mode: unrecognized content falls back to away
+ok - mode: a missing flag reads as away
+ok - stop-ordering: daemon SIGTERM'd while .afk still present (flush is not a no-op)
+ok - stop-ordering: .afk cleared last
+ok - stop-ordering: daemon-terminal record removed
+ok - stop identity: stale lock cannot signal an unrelated live process
+ok - stop: malformed terminal record preserves away state and fails closed
+ok - stop validation: malformed record causes no daemon or state side effects
+ok - stop state: away-flag removal failure is surfaced
+ok - stop liveness: captured live daemon preserves lifecycle state after lock release
+skip: herdr not found (herdr e2e)
+
+78 ok, 0 not ok
+
+=== tests/fm-afk-return.test.sh (one pre-existing host failure skipped; it fails identically at base 9296f9b) ===
+skip: test_evidence_publication_failure_preserves_wake_for_redrain (fails identically at base 9296f9b on this host)
+ok - a return with only the legacy away flag still renders the brief and measures the window from the flag
+22 ok, 0 not ok

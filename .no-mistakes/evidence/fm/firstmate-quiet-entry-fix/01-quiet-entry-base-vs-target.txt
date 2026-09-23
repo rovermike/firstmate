@@ -1,0 +1,17 @@
+=== BASE: captain types /quiet on a native-tool harness (fresh home, no away record) ===
+$ FM_AFK_MODE=quiet bash bin/fm-afk-launch.sh start-native
+fm-afk-launch: an away-posture record is required; run enter before starting the daemon
+exit=1
+--- state/ after the entry ---
+  (no state/.afk: quiet mode was never entered)
+  state/.afk-contract absent: the home is NOT in away posture
+
+=== TARGET: captain types /quiet on a native-tool harness (fresh home, no away record) ===
+$ FM_AFK_MODE=quiet bash bin/fm-afk-launch.sh start-native
+exit=0
+--- state/ after the entry ---
+  .afk
+  .afk-daemon-terminal
+--- state/.afk first line (the mode the daemon is in) ---
+  quiet
+  state/.afk-contract absent: the home is NOT in away posture

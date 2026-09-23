@@ -1,0 +1,27 @@
+=== captain says "/quiet off": bin/fm-afk-return.sh on a quiet home with no away record ===
+state/ before: .afk .afk-daemon-terminal .inactive-outcome-reconcile .lock .lock-session .session-start-complete .startup-network.delivered .startup-network.report .startup-network.status .startup-network.timings .trace-context-effective .wake-queue home-summary.json terminal-outcomes 
+
+fm-afk-launch: quiet mode stopped; no daemon terminal was running, .afk cleared, and no posture record stood
+=== Return brief (away 2026-09-23T18:24:59Z -> 2026-09-23T18:25:55Z, 56s) ===
+Supervisor health:
+  - GAP: the away daemon was not running at return (the away flag stood with no live daemon)
+  - GAP: the watcher beat was 999999s old at return (grace 300s)
+Your instructions:
+  (no away-posture record for this window: quiet mode, or a legacy away flag)
+Waiting on you:
+  (nothing)
+Tried and failed, or could not be fixed:
+  (nothing)
+Landed, cleanup due:
+  (nothing)
+Handled while away:
+  0 outcome(s) handled by the away session (0 routine, 0 escalated above)
+  (no routine outcomes recorded in the store for this window)
+Cost: 0 supervision outcome(s) recorded (0 routine, 0 captain); 0 task(s) live at return.
+catch-up health: GAP: the away daemon was not running at return (the away flag stood with no live daemon)
+catch-up health: GAP: the watcher beat was 999999s old at return (grace 300s)
+fm-afk-return: catch-up clear; ordinary captain work may proceed
+exit=0
+
+state/ after: .inactive-outcome-reconcile .lock .lock-session .session-start-complete .startup-network.delivered .startup-network.report .startup-network.status .startup-network.timings .trace-context-effective .wake-queue home-summary.json terminal-outcomes 
+state/.afk cleared: quiet mode is over
