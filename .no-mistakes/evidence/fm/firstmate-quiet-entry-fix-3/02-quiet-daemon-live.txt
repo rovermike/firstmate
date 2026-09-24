@@ -1,0 +1,11 @@
+### Scenario 2: the quiet daemon actually runs, gated by the quiet flag (no away record)
+
+$ FM_AFK_STATE_PREPARED=1 bin/fm-afk-start.sh    (claude background bash, per the skill)
+afk: starting supervise daemon in foreground; keep this command as a tracked background session
+
+--- daemon log (state/.supervise-daemon.log) ---
+[2026-09-24T10:47:12-0400] daemon starting (pid 64643); target=%0; target_source=FM_SUPERVISOR_TARGET; backend=tmux; backend_source=FM_SUPERVISOR_BACKEND; afk=on; inject_skip='heartbeat'; stale_escalate=240s; batch=90s
+
+daemon pid alive : yes (pid=64643)
+state/.afk       : quiet 1790261215 
+state/.afk-contract: absent

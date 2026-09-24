@@ -1,0 +1,14 @@
+### Scenario 3: a second /quiet while already quiet is a refresh - same window, still quiet
+
+flag before refresh: quiet|1790261215|
+$ FM_AFK_MODE=quiet bin/fm-afk-launch.sh start-native   (captain types /quiet again)
+fm-afk-launch: daemon already running; refreshed the quiet-mode flag
+exit=0
+flag after refresh : quiet|1790261215|
+
+$ bin/fm-afk-launch.sh start-native                     (bare /afk-shaped refresh, FM_AFK_MODE unset)
+fm-afk-launch: daemon already running; refreshed the quiet-mode flag
+exit=0
+flag after bare refresh: quiet|1790261215|
+
+=> mode stays quiet and the window-start epoch is unchanged across both refreshes.

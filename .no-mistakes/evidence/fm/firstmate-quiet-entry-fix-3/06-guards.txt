@@ -1,0 +1,20 @@
+### Scenario 6: /afk still needs its away-posture record - the fix did not open a hole
+$ FM_AFK_MODE=away bin/fm-afk-launch.sh start-native     (no record on disk)
+fm-afk-launch: an away-posture record is required; run enter before starting the daemon - but a quiet entry never runs enter: set FM_AFK_MODE=quiet, which is not the away posture and needs no record
+exit=1
+$ bin/fm-afk-launch.sh start-native                      (FM_AFK_MODE unset, empty home = away)
+fm-afk-launch: an away-posture record is required; run enter before starting the daemon - but a quiet entry never runs enter: set FM_AFK_MODE=quiet, which is not the away posture and needs no record
+exit=1
+state/.afk: not written
+
+### Scenario 7 (adversarial): /quiet is refused while an away-posture record stands
+$ bin/fm-afk-launch.sh enter --words 'merge the windows fix when green'
+Away posture recorded at 2026-09-24T14:50:30Z: hold-for-return only. No phone channel is configured; anything that needs you waits for your return. Your away instructions are recorded verbatim; the away session will carry them out where it can, and anything it is unsure of, or that needs you, waits for your return. Destructive, irreversible, and security-sensitive actions are never pre-authorizable, whatever the words say. Expected return: not given. Spend cap: 4 concurrent workers.
+Away posture (recorded):
+  entered: 2026-09-24T14:50:30Z
+  expected return: not given
+  record: present
+$ FM_AFK_MODE=quiet bin/fm-afk-launch.sh start-native    (captain now types /quiet)
+fm-afk-launch: an away-posture record stands; quiet mode cannot start until the captain's return (bin/fm-afk-return.sh) archives it
+exit=1
+  state/.afk: not written - quiet never coexists with the away posture

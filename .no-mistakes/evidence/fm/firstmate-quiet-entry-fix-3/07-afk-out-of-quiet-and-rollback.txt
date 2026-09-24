@@ -1,0 +1,23 @@
+### Scenario 8: the captain in quiet mode types /afk - the posture becomes away, the live daemon keeps its presence gate
+  flag before /afk : quiet|1790261936|   daemon alive=yes
+$ bin/fm-afk-launch.sh enter --words 'ship the quiet fix'
+  exit=0
+    Away posture (recorded):
+      entered: 2026-09-24T14:58:59Z
+      expected return: not given
+      spend cap: 4 concurrent workers
+      reach: hold-for-return only. No phone channel is configured; anything that needs you waits for your return.
+  flag after /afk  : away|1790261939|
+  record           : present
+  flag ever absent during the rewrite: no - rewritten in place, never removed, so the daemon never lost its presence gate
+  daemon still alive: yes
+
+### Scenario 9 (adversarial): an /afk entry that fails leaves the quiet home exactly as it was
+  flag before: quiet|1790200000|
+$ bin/fm-afk-launch.sh enter --words-file /nonexistent/path     (a usage error the contract rejects)
+fm-afk-contract: words file not found: /nonexistent/path
+  exit=2
+  flag after : quiet|1790200000|
+  byte-identical to before: yes
+  record     : absent - the reported failure is true, the home did not move
+  leftover .afk-enter-backup.* files: 0

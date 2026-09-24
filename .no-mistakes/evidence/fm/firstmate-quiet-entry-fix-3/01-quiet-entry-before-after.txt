@@ -1,0 +1,15 @@
+### Scenario 1: /quiet entry on the reported failing command
+
+--- BEFORE (base commit d4f3b78, the state the audit reported) ---
+$ FM_AFK_MODE=quiet bin/fm-afk-launch.sh start-native
+fm-afk-launch: an away-posture record is required; run enter before starting the daemon
+exit=1
+state/.afk        : ABSENT
+state/.afk-contract: absent
+
+--- AFTER (this branch, same command, same empty home) ---
+$ FM_AFK_MODE=quiet bin/fm-afk-launch.sh start-native
+exit=0
+state/.afk first line : quiet
+state/.afk-contract   : absent (quiet is not the away posture)
+daemon terminal record: none	-	native 

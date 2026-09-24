@@ -1,0 +1,40 @@
+### Scenario 4: a session restarting in quiet mode reads its posture back as quiet
+$ bin/fm-session-start.sh   (isolated home, state/.afk = 'quiet
+<epoch>', no away-posture record)
+
+3:SESSION START - /private/var/folders/cb/8rpk_9b972q8fy4jm3vy_vgw0000gn/T/fm-session-start-tests.kKDYef/quiet-digest/home
+23:- Quiet mode: active; load /quiet and keep normal harness supervision paused while the daemon owns the watcher. Ordinary captain chat does NOT exit it - only an explicit /quiet off does.
+98:present - quiet-mode supervision is active; the daemon owns the watcher, only an explicit /quiet off exits it.
+132:Quiet mode is active. Follow the supervision operating instructions block
+133:above: load /quiet and ensure the daemon is running, because the daemon owns
+135:explicit /quiet off does.
+================================================================================
+SUPERVISION OPERATING INSTRUCTIONS - primary harness: claude
+================================================================================
+Current state:
+- Lock: held by this session; this session owns normal supervision unless away mode says otherwise.
+- Quiet mode: active; load /quiet and keep normal harness supervision paused while the daemon owns the watcher. Ordinary captain chat does NOT exit it - only an explicit /quiet off does.
+- X mode: inactive; use the default watcher cadence.
+- Ordinary wake: the Stop-owned auto-arm (bin/fm-claude-stop-autoarm.sh) already owns watcher continuity; drain and handle the wake, and do not arm another cycle yourself.
+
+---- AFK subsection ----
+(none)
+
+AFK
+--------------------------------------------------------------------------------
+present - quiet-mode supervision is active; the daemon owns the watcher, only an explicit /quiet off exits it.
+
+================================================================================
+NETWORK CHECKS
+---- next step ----
+
+================================================================================
+NEXT STEP
+================================================================================
+Quiet mode is active. Follow the supervision operating instructions block
+above: load /quiet and ensure the daemon is running, because the daemon owns
+watcher supervision. Ordinary captain chat does not exit it; only an
+explicit /quiet off does.
+
+The digest above is complete for this session start. The READ-ONCE CONTRACT
+section near the top of it governs what may still be read from disk.

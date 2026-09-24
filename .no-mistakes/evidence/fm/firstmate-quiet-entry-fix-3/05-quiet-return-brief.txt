@@ -1,0 +1,29 @@
+### Scenario 5: /quiet off - the return brief names the quiet posture the captain was actually in
+
+before: state/.afk = quiet|1790261215|   daemon pid 64643 alive=yes
+
+$ bin/fm-afk-return.sh
+fm-afk-launch: quiet mode stopped; no daemon terminal was running, .afk cleared, and no posture record stood
+=== Return brief (quiet 2026-09-24T14:46:55Z -> 2026-09-24T14:49:29Z, 2m) ===
+Supervisor health:
+  - supervision ran through the away window with no detected gap (watcher beat 9s old at return)
+Your instructions:
+  (no away-posture record for this window: quiet mode, or a legacy away flag)
+Waiting on you:
+  held listing unavailable: /var/folders/cb/8rpk_9b972q8fy4jm3vy_vgw0000gn/T//fm-quiet-live.2Pdgn7/home1/data/backlog.md: ; catch-up stays gated
+Tried and failed, or could not be fixed:
+  (nothing)
+Landed, cleanup due:
+  (nothing)
+Handled while away:
+  0 outcome(s) handled by the away session (0 routine, 0 escalated above)
+  (no routine outcomes recorded in the store for this window)
+Cost: 0 supervision outcome(s) recorded (0 routine, 0 captain); 0 task(s) live at return.
+fm-afk-return: catch-up must finish before the captain request
+catch-up health: supervision ran through the away window with no detected gap (watcher beat 9s old at return)
+catch-up lifecycle: held set unreadable: /var/folders/cb/8rpk_9b972q8fy4jm3vy_vgw0000gn/T//fm-quiet-live.2Pdgn7/home1/data/backlog.md; catch-up stays gated
+fm-afk-return: handle each blocker now, or close it with resolved [key=...] and append a durable reclassification reason, then run bin/fm-afk-return.sh check
+exit=3
+
+cat: /var/folders/cb/8rpk_9b972q8fy4jm3vy_vgw0000gn/T//fm-quiet-live.2Pdgn7/home1/state/.supervise-daemon.pid: No such file or directory
+after : state/.afk cleared; daemon alive=no

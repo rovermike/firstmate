@@ -1,0 +1,20 @@
+### Scenario 10 (control): a real /afk window still reports 'away' - the brief names the posture, it is not pinned to quiet
+$ bin/fm-afk-launch.sh enter --words 'merge the windows fix when green'
+  exit=0
+$ bin/fm-afk-launch.sh start-native
+  exit=0
+  flag=away|1790261530|  record=present
+
+$ bin/fm-afk-return.sh
+fm-afk-launch: away-posture record archived at /var/folders/cb/8rpk_9b972q8fy4jm3vy_vgw0000gn/T//fm-quiet-live.2Pdgn7/home8/state/afk-contracts/1790261529.afk-contract
+fm-afk-launch: away mode stopped; no daemon terminal was running, .afk cleared, and the posture record archived
+=== Return brief (away 2026-09-24T14:52:09Z -> 2026-09-24T14:52:14Z, 5s) ===
+Supervisor health:
+  - supervision ran through the away window with no detected gap (watcher beat 3s old at return)
+Your instructions:
+  your words at entry:
+    merge the windows fix when green
+  the away session took no action under them.
+Waiting on you:
+  (nothing)
+Tried and failed, or could not be fixed:

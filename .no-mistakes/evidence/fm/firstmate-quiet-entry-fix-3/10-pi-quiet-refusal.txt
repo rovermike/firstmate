@@ -1,0 +1,11 @@
+### Scenario 12 (adversarial): an agent following /quiet on a Pi primary
+    (real bin/fm-afk-launch.sh; only bin/fm-harness.sh is replaced with a stub reporting 'pi',
+     because this validation process runs under a claude harness and cannot become a Pi process)
+
+$ FM_AFK_MODE=quiet bin/fm-afk-launch.sh start-native
+fm-afk-launch: the away daemon is no longer launched on pi; the away-posture record is the posture there (run bin/fm-afk-launch.sh enter and stop), and quiet mode launches nothing at all here, so never run enter for /quiet
+exit=1
+  state/.afk: not written; record: absent
+
+  the same refusal on the base commit, which never named the quiet rule:
+fm-afk-launch: the away daemon is no longer launched on pi; the away-posture record is the posture there (run bin/fm-afk-launch.sh enter and stop)

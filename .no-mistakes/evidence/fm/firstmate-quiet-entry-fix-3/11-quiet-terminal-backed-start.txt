@@ -1,0 +1,23 @@
+### Scenario 13: /quiet on a terminal-backed harness (codex/opencode/omp/kimi/cursor) - 'start', real tmux daemon terminal
+captain pane %0, panes in its window before: 1
+
+$ FM_AFK_MODE=quiet bin/fm-afk-launch.sh start
+fm-afk-launch: daemon launched in detached tmux session 'fm-afk-daemon-3732904866-89165-13068-1790261881', supervising %0
+exit=0
+  state/.afk         : quiet|1790261881|
+  state/.afk-contract: absent
+  daemon terminal    : tmux	fm-afk-daemon-3732904866-89165-13068-1790261881	 
+  captain window panes after start: 1  (unchanged - the daemon is in a separate non-visible session)
+  new tmux sessions  : fm-afk-daemon-3732904866-89165-13068-1790261881 
+
+$ bin/fm-afk-return.sh    (/quiet off)
+fm-afk-launch: terminal close command failed, but exact absence was confirmed
+fm-afk-launch: quiet mode stopped; daemon terminal torn down, .afk cleared, and no posture record stood
+=== Return brief (quiet 2026-09-24T14:58:01Z -> 2026-09-24T14:58:09Z, 8s) ===
+Supervisor health:
+  - supervision ran through the away window with no detected gap (watcher beat 2s old at return)
+Your instructions:
+  (no away-posture record for this window: quiet mode, or a legacy away flag)
+Waiting on you:
+  captain window panes after stop : 1
+  leftover tmux sessions from this run: [none expected]

@@ -1,0 +1,11 @@
+### Adversarial probe: enter fails AFTER the record write (stdout closed mid-announcement)
+    command: bin/fm-afk-launch.sh enter --words 'ship it' | head -1   (head closes the pipe -> SIGPIPE, rc=141)
+
+-- this branch --
+  flag  : quiet|1790200000|
+  record: present
+-- base commit d4f3b78 --
+  flag  : quiet|1790200000|
+  record: present
+
+=> identical on both: the branch neither introduces nor closes this narrow case.

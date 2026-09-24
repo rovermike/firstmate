@@ -1,0 +1,30 @@
+### Scenario 5b: full /quiet -> live daemon -> /quiet off cycle, clean brief
+
+$ FM_AFK_MODE=quiet bin/fm-afk-launch.sh start-native
+exit=0
+$ FM_AFK_STATE_PREPARED=1 bin/fm-afk-start.sh   (background)
+   daemon pid=42025 alive=yes; flag=quiet|1790261394|
+
+$ bin/fm-afk-return.sh      (the captain types /quiet off)
+fm-afk-launch: quiet mode stopped; no daemon terminal was running, .afk cleared, and no posture record stood
+=== Return brief (quiet 2026-09-24T14:49:54Z -> 2026-09-24T14:50:00Z, 6s) ===
+Supervisor health:
+  - supervision ran through the away window with no detected gap (watcher beat 4s old at return)
+Your instructions:
+  (no away-posture record for this window: quiet mode, or a legacy away flag)
+Waiting on you:
+  (nothing)
+Tried and failed, or could not be fixed:
+  (nothing)
+Landed, cleanup due:
+  (nothing)
+Handled while away:
+  0 outcome(s) handled by the away session (0 routine, 0 escalated above)
+  (no routine outcomes recorded in the store for this window)
+Cost: 0 supervision outcome(s) recorded (0 routine, 0 captain); 0 task(s) live at return.
+catch-up health: supervision ran through the away window with no detected gap (watcher beat 4s old at return)
+WAKE_ACK_REQUIRED: after handling completes run bin/fm-wake-drain.sh --ack-through 0 --recovery-generation 44154.1790261399.ghGEYJ
+fm-afk-return: catch-up clear; ordinary captain work may proceed
+exit=0
+
+after: state/.afk cleared; .afk-contract absent; catch-up gate cleared
