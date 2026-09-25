@@ -1,0 +1,16 @@
+### BEFORE (base commit c60f0ab), the captain says /quiet:
+$ FM_HOME=$T FM_STATE_OVERRIDE=$T/state FM_AFK_MODE=quiet bash bin/fm-afk-launch.sh start-native
+fm-afk-launch: an away-posture record is required; run enter before starting the daemon
+exit=1
+state/.afk present? no
+
+### AFTER (this change), same command, same empty home:
+$ FM_HOME=$T FM_STATE_OVERRIDE=$T/state FM_AFK_MODE=quiet bash bin/fm-afk-launch.sh start-native
+exit=0
+--- state/.afk (mode, window-start epoch) ---
+quiet
+1790342508
+--- away-posture record state/.afk-contract present? ---
+absent (correct: quiet is not the away posture)
+--- session-start digest reads the home as: ---
+HOME=/var/folders/cb/8rpk_9b972q8fy4jm3vy_vgw0000gn/T//fm-quiet-live.836yEX

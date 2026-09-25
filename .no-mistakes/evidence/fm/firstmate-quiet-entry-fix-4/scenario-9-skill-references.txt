@@ -1,0 +1,10 @@
+The quiet skill cites these afk-skill sections:
+`afk` skill's "Entering: `/afk [words]`"
+`afk` skill's "How to exit: the return"
+
+Headings that actually exist in .agents/skills/afk/SKILL.md:
+20:## Entering: `/afk [words]`
+54:## While away
+66:## How to exit: the return
+87:## Orthogonal to approval authority
+100:## The daemon, where it still runs

@@ -1,0 +1,22 @@
+captain pane: fm-quietlive-16628:captain.0 (throwaway tmux session; the daemon entry is replaced by a sleeper so only the terminal lifecycle is observed)
+
+=== /quiet on the terminal-backed path: bin/fm-afk-launch.sh start, no away-posture record ===
+fm-afk-launch: daemon launched in detached tmux session 'fm-afk-daemon-124277299-16643-23610-1790342794', supervising fm-quietlive-16628:captain.0
+exit=0
+--- state/.afk ---
+quiet
+1790342794
+--- away-posture record? ---
+absent (correct: quiet is not the away posture)
+--- captain window pane count (stays 1: the daemon is NOT a split of the captain) ---
+1
+--- detached daemon sessions ---
+1
+
+=== /quiet off: bin/fm-afk-launch.sh stop ===
+fm-afk-launch: quiet mode stopped; daemon terminal torn down, .afk cleared, and no posture record stood
+exit=0
+state/.afk present? no
+daemon terminal record present? no
+daemon sessions left: 0
+captain window pane count after stop: 1

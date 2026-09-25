@@ -1,0 +1,22 @@
+harness: claude, config/supervision-host present
+
+=== /quiet still launches the daemon on a supervision-host home ===
+exit=0
+quiet
+1790342691
+
+=== a bare refresh of that quiet daemon (FM_AFK_MODE unset) is still allowed ===
+fm-afk-launch: reconciling leaked daemon terminal none:-
+exit=0
+quiet
+1790342691
+
+=== the captain now goes /afk out of quiet mode: enter rewrites the flag to away ===
+(enter exit=0)
+away
+1790342693
+=== and the away daemon is now correctly refused on this home, record intact ===
+fm-afk-launch: the away daemon is not launched on this claude home, which runs the supervision host (config/supervision-host); the away-posture record is the posture here (run bin/fm-afk-launch.sh enter and stop)
+exit=1
+record intact? yes
+presence gate intact? yes

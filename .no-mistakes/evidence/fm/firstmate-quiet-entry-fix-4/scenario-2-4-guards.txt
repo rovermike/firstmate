@@ -1,0 +1,36 @@
+=== SCENARIO 2: /afk still refuses to start the daemon without the away-posture record ===
+$ FM_AFK_MODE=away bash bin/fm-afk-launch.sh start-native   # no enter was run
+fm-afk-launch: an away-posture record is required; run enter before starting the daemon - but a quiet entry never runs enter: set FM_AFK_MODE=quiet, which is not the away posture and needs no record
+exit=1
+state/.afk written? no (correct: the away guard held)
+
+$ bash bin/fm-afk-launch.sh start-native   # FM_AFK_MODE unset, empty home -> still away, still refused
+fm-afk-launch: an away-posture record is required; run enter before starting the daemon - but a quiet entry never runs enter: set FM_AFK_MODE=quiet, which is not the away posture and needs no record
+exit=1
+state/.afk written? no (correct)
+
+=== SCENARIO 3 (adversarial): /quiet refuses while an away-posture record stands ===
+$ bash bin/fm-afk-launch.sh enter   # captain goes /afk
+Away posture recorded at 2026-09-25T13:22:10Z: hold-for-return only. No phone channel is configured; anything that needs you waits for your return. No away instructions were recorded; the away session acts on standing authority only, and anything that needs you waits for your return. Destructive, irreversible, and security-sensitive actions are never pre-authorizable, whatever the words say. Expected return: not given. Spend cap: 4 concurrent workers.
+Away posture (recorded):
+  entered: 2026-09-25T13:22:10Z
+/Users/mikephilip/.no-mistakes/worktrees/2aef680c1b2d/01M3BAVPMTXJ6E23BAQPKZ7WFE/bin/fm-afk-contract.sh: line 342: printf: write error: Broken pipe
+(enter exit=)
+record present? yes
+$ FM_AFK_MODE=quiet bash bin/fm-afk-launch.sh start-native   # now the captain says /quiet
+fm-afk-launch: an away-posture record stands; quiet mode cannot start until the captain's return (bin/fm-afk-return.sh) archives it
+exit=1
+record still intact? yes (correct: quiet did not clobber the away posture)
+
+=== SCENARIO 4: /afk out of quiet mode rewrites the flag to away and keeps the presence gate ===
+(quiet entry exit=0)
+--- state/.afk after /quiet ---
+quiet
+1790342532
+$ bash bin/fm-afk-launch.sh enter   # captain now goes /afk out of quiet mode
+(enter exit=0)
+--- state/.afk after /afk ---
+away
+1790342533
+presence gate (state/.afk) still present for the live daemon? yes (correct: rewritten, never removed)
+away-posture record written? yes

@@ -1,0 +1,23 @@
+harness resolves to: pi   (supervision-branch primary pin)
+
+=== On a Pi home the captain says /quiet ===
+$ FM_AFK_MODE=quiet bash bin/fm-afk-launch.sh start-native
+fm-afk-launch: the away daemon is no longer launched on pi; the away-posture record is the posture there (run bin/fm-afk-launch.sh enter and stop), and quiet mode launches nothing at all here, so never run enter for /quiet
+exit=1
+state/.afk written? no - nothing durable, so /quiet off has nothing to return from (the restored Pi carve-out)
+state/.afk-contract written? no (correct)
+$ FM_AFK_MODE=quiet bash bin/fm-afk-launch.sh start   (terminal-backed path)
+fm-afk-launch: the away daemon is no longer launched on pi; the away-posture record is the posture there (run bin/fm-afk-launch.sh enter and stop), and quiet mode launches nothing at all here, so never run enter for /quiet
+exit=1
+
+=== pi-signed ===
+fm-afk-launch: the away daemon is no longer launched on pi-signed; the away-posture record is the posture there (run bin/fm-afk-launch.sh enter and stop), and quiet mode launches nothing at all here, so never run enter for /quiet
+exit=1
+durable files written into state/: 0
+
+=== the restored carve-out's shared-home case: a posture entered from another session still stands ===
+$ bash bin/fm-afk-return.sh guard   # state/.afk stands -> the ordinary return is what exits it
+fm-afk-return: away mode is still active; run bin/fm-afk-return.sh before ordinary captain work
+exit=3 (3 = a posture is still active in this shared home)
+$ bash bin/fm-afk-return.sh guard   # neither flag nor record: run no return
+exit=0 (0 = ordinary work may proceed)

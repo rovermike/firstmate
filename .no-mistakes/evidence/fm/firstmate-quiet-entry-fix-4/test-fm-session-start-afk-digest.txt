@@ -1,4 +1,3 @@
-ok - next step delegates watcher ownership to the daemon in quiet mode, distinctly from away mode
+ok - next step delegates watcher ownership to the AFK daemon
 ok - a legacy empty .afk flag (written before mode existed) still reads as away mode
 # fm-session-start.test.sh: all assertions passed
-bash tests/fm-session-start.test.sh  1.79s user 3.14s system 35% cpu 13.952 total

@@ -1,0 +1,8 @@
+$ bash bin/fm-session-start.sh   (on a home whose only posture is a quiet flag)
+--- the digest's AFK subsection ---
+(none)
+
+AFK
+--------------------------------------------------------------------------------
+present - quiet-mode supervision is active; the daemon owns the watcher, only an explicit /quiet off exits it.
+
