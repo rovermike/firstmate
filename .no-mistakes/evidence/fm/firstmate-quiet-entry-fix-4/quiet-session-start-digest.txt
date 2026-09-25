@@ -1,0 +1,13 @@
+# fm-session-start.test.sh: all assertions passed
+AFK
+--------------------------------------------------------------------------------
+present - quiet-mode supervision is active; the daemon owns the watcher, only an explicit /quiet off exits it.
+
+--- next step ---
+Quiet mode is active. Follow the supervision operating instructions block
+above: load /quiet and ensure the daemon is running, because the daemon owns
+watcher supervision. Ordinary captain chat does not exit it; only an
+explicit /quiet off does.
+
+The digest above is complete for this session start. The READ-ONCE CONTRACT
+section near the top of it governs what may still be read from disk.

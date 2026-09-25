@@ -1,0 +1,14 @@
+========== S9 supervision-host claude home: /afk launches no daemon, /quiet still does ==========
+$ # away entry first: the record, then the daemon path
+Away posture recorded at 2026-09-25T04:26:42Z: hold-for-return only. No phone channel is configured; anything that needs you waits for your return. Your away instructions are recorded verbatim; the away session will carry them out where it can, and anything it is unsure of, or that needs you, waits for your return. Destructive, irreversible, and security-sensitive actions are never pre-authorizable, whatever the words say. Expected return: not given. Spend cap: 4 concurrent workers.
+$ bin/fm-afk-launch.sh start-native   # away
+fm-afk-launch: the away daemon is not launched on this claude home, which runs the supervision host (config/supervision-host); the away-posture record is the posture here (run bin/fm-afk-launch.sh enter and stop)
+exit=1
+$ bin/fm-afk-launch.sh stop   # the captain returns
+fm-afk-launch: away mode stopped; no daemon terminal was running, .afk cleared, and the posture record archived
+$ FM_AFK_MODE=quiet bin/fm-afk-launch.sh start-native   # /quiet on the same home
+exit=0
+$ cat state/.afk
+quiet
+1790310412
+SCENARIO RESULT: PASS - the away daemon is refused on a supervision-host home while /quiet enters it with no record

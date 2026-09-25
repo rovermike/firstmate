@@ -1,0 +1,148 @@
+
+========== S1 quiet entry without an away-posture record (the reported failure) ==========
+$ # BASE /tmp/fmquiet-base.3iKILF
+$ FM_AFK_MODE=quiet bin/fm-afk-launch.sh start-native
+fm-afk-launch: an away-posture record is required; run enter before starting the daemon
+exit=1   state/: 
+
+$ # TARGET
+$ FM_AFK_MODE=quiet bin/fm-afk-launch.sh start-native
+exit=0
+$ cat state/.afk
+quiet
+1790309972
+$ ls -A state/
+.afk .afk-daemon-terminal 
+SCENARIO RESULT: PASS - quiet mode entered with exit 0, flag reads quiet, and no away-posture record was created
+
+========== S2 bare quiet refresh keeps quiet and the original window start ==========
+$ # backdate the window start to an hour ago, then refresh with FM_AFK_MODE unset
+fm-afk-launch: reconciling leaked daemon terminal none:-
+exit=0
+$ cat state/.afk
+quiet
+1790306372
+SCENARIO RESULT: PASS - refresh needed no record, kept mode=quiet and window start 1790306372
+
+========== S3 ADVERSARIAL: quiet start refused while an away-posture record stands ==========
+$ # away posture recorded; now try to sneak into quiet mode
+$ FM_AFK_MODE=quiet bin/fm-afk-launch.sh start-native
+fm-afk-launch: an away-posture record stands; quiet mode cannot start until the captain's return (bin/fm-afk-return.sh) archives it
+exit=1   state/: .afk-contract 
+SCENARIO RESULT: PASS - quiet start refused, no flag written, the standing away record left intact
+
+========== S4 ADVERSARIAL: an away start still requires its record ==========
+$ FM_AFK_MODE=away bin/fm-afk-launch.sh start-native   # no record on disk
+fm-afk-launch: an away-posture record is required; run enter before starting the daemon - but a quiet entry never runs enter: set FM_AFK_MODE=quiet, which is not the away posture and needs no record
+exit=1   state/: []
+$ bin/fm-afk-launch.sh start-native                    # implicit away, no record
+fm-afk-launch: an away-posture record is required; run enter before starting the daemon - but a quiet entry never runs enter: set FM_AFK_MODE=quiet, which is not the away posture and needs no record
+exit=1   state/: []
+SCENARIO RESULT: PASS - both away entries still refuse without the record and write no flag
+
+========== S5 /afk out of quiet mode rewrites the flag to away and keeps the presence gate ==========
+$ # in quiet mode: state/.afk = quiet
+$ bin/fm-afk-launch.sh enter --words "go fix prod"
+Away posture recorded at 2026-09-25T04:19:35Z: hold-for-return only. No phone channel is configured; anything that needs you waits for your return. Your away instructions are recorded verbatim; the away session will carry them out where it can, and anything it is unsure of, or that needs you, waits for your return. Destructive, irreversible, and security-sensitive actions are never pre-authorizable, whatever the words say. Expected return: not given. Spend cap: 4 concurrent workers.
+Away posture (recorded):
+  entered: 2026-09-25T04:19:35Z
+  expected return: not given
+  spend cap: 4 concurrent workers
+  reach: hold-for-return only. No phone channel is configured; anything that needs you waits for your return.
+$ cat state/.afk
+away
+1790309975
+$ test -f state/.afk-contract -> present
+SCENARIO RESULT: PASS - the quiet flag became away, the flag (the daemon presence gate) still stands, and the record was written
+$ bin/fm-afk-launch.sh stop
+fm-afk-launch: away-posture record archived at /var/folders/cb/8rpk_9b972q8fy4jm3vy_vgw0000gn/T//fm-quiet-live.lqu8Jl/state/afk-contracts/1790309975.afk-contract
+fm-afk-launch: away mode stopped; no daemon terminal was running, .afk cleared, and the posture record archived
+
+========== S6 /quiet off: the real return brief names the quiet posture ==========
+$ # one hour of quiet mode, then the captain says /quiet off
+$ bin/fm-afk-return.sh
+fm-afk-launch: quiet mode stopped; no daemon terminal was running, .afk cleared, and no posture record stood
+=== Return brief (quiet 2026-09-25T03:19:36Z -> 2026-09-25T04:19:37Z, 1h00m) ===
+Supervisor health:
+  - GAP: the away daemon was not running at return (the away flag stood with no live daemon)
+  - GAP: the watcher beat was 999999s old at return (grace 300s)
+Your instructions:
+  (no away-posture record for this window: quiet mode, or a legacy away flag)
+Waiting on you:
+  (nothing)
+Tried and failed, or could not be fixed:
+  (nothing)
+Landed, cleanup due:
+  (nothing)
+Handled while away:
+  0 outcome(s) handled by the away session (0 routine, 0 escalated above)
+  (no routine outcomes recorded in the store for this window)
+Cost: 0 supervision outcome(s) recorded (0 routine, 0 captain); 0 task(s) live at return.
+catch-up health: GAP: the away daemon was not running at return (the away flag stood with no live daemon)
+catch-up health: GAP: the watcher beat was 999999s old at return (grace 300s)
+fm-afk-return: catch-up clear; ordinary captain work may proceed
+exit=0   state/: [.wake-queue ]
+SCENARIO RESULT: PASS - the brief header reads quiet, measures the full 1h window from the flag, the stop names quiet and claims no record archive
+
+========== S7 ADVERSARIAL: on Pi, /quiet launches nothing and the refusal steers off enter ==========
+$ # harness=pi
+$ FM_AFK_MODE=quiet bin/fm-afk-launch.sh start
+fm-afk-launch: the away daemon is no longer launched on pi; the away-posture record is the posture there (run bin/fm-afk-launch.sh enter and stop), and quiet mode launches nothing at all here, so never run enter for /quiet
+exit=1   state/: []
+SCENARIO RESULT: PASS - pi: quiet start launched nothing, wrote nothing durable, and told the agent not to run enter
+$ # harness=pi-signed
+$ FM_AFK_MODE=quiet bin/fm-afk-launch.sh start
+fm-afk-launch: the away daemon is no longer launched on pi-signed; the away-posture record is the posture there (run bin/fm-afk-launch.sh enter and stop), and quiet mode launches nothing at all here, so never run enter for /quiet
+exit=1   state/: []
+SCENARIO RESULT: PASS - pi-signed: quiet start launched nothing, wrote nothing durable, and told the agent not to run enter
+
+========== S8 Pi /quiet off carve-out: no posture -> no return; a standing posture -> the ordinary return ==========
+$ # a Pi home in quiet mode: no state/.afk, no state/.afk-contract, one open blocker
+$ ls -A state/
+repair.meta repair.status 
+$ bin/fm-afk-return.sh
+●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+●  WATCHER DOWN - SUPERVISION IS OFF
+●  1 task(s) in flight, but no watcher has a fresh beacon (last beat: never, grace 300s).
+●  Trust the emitted supervision protocol for this harness; do not use shell & for watcher repair.
+●  This is a supervision warning only; the guarded operation WILL still run.
+●  watcher supervision needs Stop-owned automatic recovery; inspect the hook registration and startup status before ending the turn.
+●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+=== Return brief ===
+Supervisor health:
+  - GAP: the watcher beat was 999999s old at return (grace 300s)
+Your instructions:
+  (no away-posture record for this window: quiet mode, or a legacy away flag)
+Waiting on you:
+  (nothing)
+Tried and failed, or could not be fixed:
+  - repair [key=synthetic-dependency] still blocked, firstmate remediates before ordinary work: firstmate can refresh the synthetic token
+Landed, cleanup due:
+  (nothing)
+Handled while away:
+  0 outcome(s) handled by the away session (0 routine, 0 escalated above)
+  (no routine outcomes recorded in the store for this window)
+Cost: 0 supervision outcome(s) recorded (0 routine, 0 captain); 1 task(s) live at return.
+fm-afk-return: catch-up must finish before the captain request
+catch-up health: GAP: the watcher beat was 999999s old at return (grace 300s)
+catch-up wake: OPEN DECISIONS (still open, folded from the durable status logs - not just the latest line):
+catch-up wake: repair [key=synthetic-dependency] blocked: firstmate can refresh the synthetic token
+catch-up wake: OPEN DECISIONS: close one by answering it: bin/fm-send.sh <task> --resolve-key <key> '<answer>'
+firstmate-actionable blocker: repair [key=synthetic-dependency] firstmate can refresh the synthetic token
+fm-afk-return: handle each blocker now, or close it with resolved [key=...] and append a durable reclassification reason, then run bin/fm-afk-return.sh check
+exit=3
+SCENARIO RESULT: PASS - running the return with no posture standing opens the catch-up gate (exit 3) and blocks ordinary work - exactly what the restored carve-out tells the agent to skip
+
+$ # same home, but another session left state/.afk standing
+$ bin/fm-afk-return.sh
+fm-afk-launch: quiet mode stopped; no daemon terminal was running, .afk cleared, and no posture record stood
+WARNING: watcher still down (same stale episode; last beat: never, grace 300s) - full banner already printed this episode.
+=== Return brief (quiet 2026-09-25T04:09:49Z -> 2026-09-25T04:20:11Z, 10m) ===
+Supervisor health:
+  - GAP: the away daemon was not running at return (the away flag stood with no live daemon)
+  - GAP: the watcher beat was 999999s old at return (grace 300s)
+exit=3
+SCENARIO RESULT: PASS - with a flag standing the ordinary return runs, names the quiet posture, and clears the flag
+
+========== SUITE ==========
+ALL SCENARIOS PASSED

@@ -1,0 +1,18 @@
+=== BASE a8572f6 ===
+afk skill headings: ['afk', 'Entering: `/afk [words]`', 'While away', 'How to exit: the return', 'Orthogonal to approval authority', 'The daemon, where it still runs', 'Operational prefix contract', 'Busy-guard and composer guard', 'Submit model', 'Classification policy', 'Injection hardening', 'Stale-artifact lifecycle', 'Reliability properties']
+quiet skill cites 2 afk section reference(s)
+  - "What it does": DANGLING (no such section in the afk skill)
+  - "How to exit afk": DANGLING (no such section in the afk skill)
+RESULT: 2 dangling reference(s)
+exit=1
+
+=== TARGET 8546605 ===
+afk skill headings: ['afk', 'Entering: `/afk [words]`', 'While away', 'How to exit: the return', 'Orthogonal to approval authority', 'The daemon, where it still runs', 'Operational prefix contract', 'Busy-guard and composer guard', 'Submit model', 'Classification policy', 'Injection hardening', 'Stale-artifact lifecycle', 'Reliability properties']
+quiet skill cites 5 afk section reference(s)
+  - "How to exit: the return": RESOLVES
+  - "Entering: `/afk [words]`" step 2 -> step exists (steps present: ['1', '2', '3', '4']): RESOLVES
+  - "How to exit: the return": RESOLVES
+  - "How to exit: the return": RESOLVES
+  - "How to exit: the return": RESOLVES
+RESULT: all cited sections and steps resolve
+exit=0
