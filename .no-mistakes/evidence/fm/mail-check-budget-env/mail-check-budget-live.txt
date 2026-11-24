@@ -1,0 +1,78 @@
+########################################################################
+# Scenario 1 - the reported incident, through the real watcher.
+#   A Gmail poll that takes 20s, in a home whose .env sets
+#   FM_MAIL_CHECK_BUDGET=25. Check armed with fm-mail-check.sh arm;
+#   bin/fm-watch.sh dispatches the trust-bound state/mail.check.sh shim.
+########################################################################
+
+--- fm-mail-check.sh from base 68918448 (before the fix) ---
+check: <home>/state/mail.check.sh: mail: poll did not finish within the 15s budget
+(watcher cycle took 17s)
+durable mail wake rows for this poll: 0
+
+--- fm-mail-check.sh from HEAD 6d21f3b0 (after the fix) ---
+check: <home>/state/mail.check.sh: mail: new mail: woke for 91
+(watcher cycle took 24s)
+durable mail wake rows for this poll: 1
+
+########################################################################
+# Scenario 2 - the budget the check actually enforces, measured by
+#   waiting one out against a poll that never returns.
+########################################################################
+--- base, .env FM_MAIL_CHECK_BUDGET=25, environment silent ---
+mail: poll did not finish within the 15s budget
+(wall clock 15s)
+--- HEAD, .env FM_MAIL_CHECK_BUDGET=25, environment silent ---
+mail: poll did not finish within the 25s budget
+(wall clock 26s)
+--- HEAD, .env=25 but the environment sets 5: the environment wins ---
+mail: poll did not finish within the 5s budget
+(wall clock 5s)
+--- HEAD, .env=25 under a tighter watcher bound FM_CHECK_TIMEOUT=10 ---
+mail: poll did not finish within the 7s budget
+(wall clock 7s)
+--- HEAD, zero-padded .env spelling 007 is the number it names ---
+mail: poll did not finish within the 7s budget
+(wall clock 7s)
+
+########################################################################
+# Scenario 3 - adversarial: a mistyped budget must not silence the
+#   mail plane. Only the check's stdout reaches the watcher.
+########################################################################
+
+--- base, FM_MAIL_CHECK_BUDGET=30 (out of range) ---
+stdout the watcher consumes:
+check exit status: 2
+durable mail wake rows: 
+arm exit status: 2
+
+--- HEAD, FM_MAIL_CHECK_BUDGET=30 (out of range) ---
+stdout the watcher consumes:
+mail: new mail: woke for 42; FM_MAIL_CHECK_BUDGET=30 is not a whole number from 5 to 25; polling on the 15s budget
+check exit status: 0
+durable mail wake rows: 1
+armed: state/mail.check.sh
+arm exit status: 0
+
+--- HEAD, an annotated .env value, through the real watcher ---
+check: <home>/state/mail.check.sh: mail: new mail: woke for 42; FM_MAIL_CHECK_BUDGET=25 # slow Gmail is not a whole number from 5 to 25; polling on the 15s budget
+durable mail wake rows: 1
+disarmed: state/mail.check.sh
+
+--- HEAD, every rejected and accepted spelling, one poll each ---
+.env=4         -> mail: FM_MAIL_CHECK_BUDGET=4 is not a whole number from 5 to 25; polling on the 15s budget
+.env=5         -> 
+.env=25        -> 
+.env=26        -> mail: FM_MAIL_CHECK_BUDGET=26 is not a whole number from 5 to 25; polling on the 15s budget
+.env=000       -> mail: FM_MAIL_CHECK_BUDGET=000 is not a whole number from 5 to 25; polling on the 15s budget
+.env=025       -> 
+.env=0000000005 -> 
+.env=999999999999 -> mail: FM_MAIL_CHECK_BUDGET=999999999999 is not a whole number from 5 to 25; polling on the 15s budget
+.env=abc       -> mail: FM_MAIL_CHECK_BUDGET=abc is not a whole number from 5 to 25; polling on the 15s budget
+(an empty result line means the budget was accepted and the poll was a proven no-op)
+
+########################################################################
+# Scenario 4 - adversarial: a long annotated value must not cost the
+#   poll its own finding on the one capped line.
+########################################################################
+mail: fm-mail poll error: connection refused; FM_MAIL_CHECK_BUDGET=25 # xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx [truncated]
